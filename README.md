@@ -1,10 +1,5 @@
 # Tu Reserva Trip - Sistema de Gestión de Usuarios
 
-## 📋 Información de la Evidencia
-
-**Evidencia:** GA7-220501096-AA2-EV01  
-**Tema:** Codificación de módulos del software según requerimientos del proyecto  
-**Tecnologías:** Node.js, Express, MySQL, JavaScript vanilla
 
 ## 🎯 Objetivo del Proyecto
 
