@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ventas TRT - Sistema de Gestión</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body class="min-h-screen">
+    <!-- Ventana de Autenticacion -->
+    <div id="auth-screen" class="flex items-center justify-center min-h-screen bg-gray-100">
+        <div class="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg">
+            <div class="text-center">
+                <img src="assets/img/LogoRT1.png" alt="Logo de la empresa" class="mx-auto h-20 w-auto">
+                <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Ventas TRT</h2>
+                <p class="mt-2 text-sm text-gray-600">Sistema de Gestión Integrado</p>
+            </div>
+
+            <!-- Formulario de inicio de sesion -->
+            <form id="login-form" class="mt-8 space-y-6">
+                <div class="rounded-md shadow-sm space-y-4">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+                        <input id="email" name="email" type="email" autocomplete="email" required 
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                               placeholder="Ingresa tu correo electrónico" value="juan.perez@email.com">
+                    </div>
+                    
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required 
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                               placeholder="Ingrese su contraseña" value="password123">
+                    </div>
+                    
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-gray-700">Rol</label>
+                        <select id="role" name="role" required 
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="">Selecciona tu rol</option>
+                            <option value="ADMIN">Administrador</option>
+                            <option value="VENDEDOR">Vendedor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" 
+                            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="fas fa-lock h-5 w-5 text-indigo-500 group-hover:text-indigo-400"></i>
+                        </span>
+                        Iniciar Sesión
+                    </button>
+                </div>
+            </form>
+
+            <!-- Formulario de registro (inicialmente oculto) -->
+            <form id="register-form" class="mt-8 space-y-6 hidden">
+                <div class="rounded-md shadow-sm space-y-4">
+                    <div>
+                        <label for="reg-email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+                        <input id="reg-email" name="reg-email" type="email" autocomplete="email" required 
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                               placeholder="Ingresa tu correo electrónico">
+                    </div>
+                    
+                    <div>
+                        <label for="reg-password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                        <input id="reg-password" name="reg-password" type="password" autocomplete="new-password" required 
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                               placeholder="Crea una contraseña">
+                    </div>
+                    
+                    <div>
+                        <label for="reg-confirm-password" class="block text-sm font-medium text-gray-700">Confirmar contraseña</label>
+                        <input id="reg-confirm-password" name="reg-confirm-password" type="password" autocomplete="new-password" required 
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                               placeholder="Confirma tu contraseña">
+                    </div>
+                    
+                    <div>
+                        <label for="reg-role" class="block text-sm font-medium text-gray-700">Rol</label>
+                        <select id="reg-role" name="reg-role" required 
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="">Selecciona tu rol</option>
+                            <option value="ADMIN">Administrador</option>
+                            <option value="VENDEDOR">Vendedor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" 
+                            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="fas fa-user-plus h-5 w-5 text-green-500 group-hover:text-green-400"></i>
+                        </span>
+                        Registrarse
+                    </button>
+                </div>
+            </form>
+
+            <!-- Enlaces para cambiar entre formularios -->
+            <div class="text-center space-y-2">
+                <button id="show-register" class="text-indigo-600 hover:text-indigo-500 text-sm">
+                    ¿No tienes cuenta? Regístrate
+                </button>
+                <button id="show-login" class="text-indigo-600 hover:text-indigo-500 text-sm hidden">
+                    ¿Ya tienes cuenta? Inicia sesión
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Aplicacion principal -->
+    <div id="app-container" class="hidden">
+        <!-- Sidebar -->
+        <div id="sidebar-container"></div>
+        
+        <!-- Contenido principal -->
+        <div class="ml-64 p-8">
+            <!-- Dashboard -->
+            <div id="dashboard-container"></div>
+            
+            <!-- Ventas -->
+            <div id="sales-container"></div>
+            
+            <!-- Reportes -->
+            <div id="reports-container"></div>
+            
+            <!-- Usuarios -->
+            <div id="users-container"></div>
+        </div>
+    </div>
+
+    <!--Contenedor de modulos -->
+    <div id="modals-container"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/database_mysql.js"></script>
+    <script src="assets/js/sidebar.js"></script>
+    <script src="assets/js/dashboard.js"></script>
+    <script src="assets/js/sales.js"></script>
+    <script src="assets/js/reports.js"></script>
+    <script src="assets/js/users.js"></script>
+    <script src="assets/js/modals.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+</body>
+</html>

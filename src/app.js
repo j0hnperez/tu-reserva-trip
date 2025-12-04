@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const usuarioRoutes = require('./routes/usuarioRoutes');
+const UsuarioController = require('./controllers/usuarioController');
 
 const app = express();
 const SERVER_PORT = 3000;
@@ -12,6 +13,9 @@ app.use(express.json());
 
 // Rutas de la API
 app.use(`${API_BASE_URL}/usuarios`, usuarioRoutes);
+
+// Ruta de login directa
+app.post(`${API_BASE_URL}/login`, UsuarioController.loginUsuario);
 
 // Ruta de verificación del servidor
 app.get('/health', (request, response) => {

@@ -1,14 +1,6 @@
 # Tu Reserva Trip - Sistema de Gestión de Usuarios
 
-## 📋 Información de la Evidencia
-
-**Evidencia:** GA7-220501096-AA2-EV01  
-**Tema:** Codificación de módulos del software según requerimientos del proyecto  
 **Tecnologías:** Node.js, Express, MySQL, JavaScript vanilla
-
-## 🎯 Objetivo del Proyecto
-
-Desarrollar un sistema de gestión de usuarios que demuestre las competencias adquiridas en el componente formativo "Construcción de aplicaciones con JAVASCRIPT", aplicando buenas prácticas de codificación, conexión a bases de datos MySQL y arquitectura MVC.
 
 ## 🏗️ Arquitectura del Sistema
 
@@ -202,25 +194,6 @@ CREATE TABLE usuario (
 - **Líneas de código:** ~500 líneas (backend + frontend)
 - **Endpoints API:** 6 endpoints funcionales
 - **Funcionalidades:** CRUD completo + validaciones
-- **Estándares:** 100% cumplimiento de convenciones
-
-## 🎓 Competencias Demostradas
-
-### Técnicas
-- ✅ Construcción de aplicaciones con JavaScript
-- ✅ Conexión a bases de datos MySQL
-- ✅ Arquitectura MVC
-- ✅ API REST
-- ✅ Manejo de errores y validaciones
-
-### Blandas
-- ✅ Pensamiento estructurado
-- ✅ Resolución de problemas
-- ✅ Atención al detalle
-- ✅ Documentación técnica
-- ✅ Buenas prácticas de desarrollo
-
-## 📦 Entrega de la Evidencia
 
 ### Archivos Incluidos
 - ✅ Código fuente completo del proyecto
@@ -228,12 +201,5 @@ CREATE TABLE usuario (
 - ✅ Documentación README
 - ✅ Enlace al repositorio Git
 
-### Formato de Entrega
-- Nombre del archivo: `NOMBREAPELLIDO_AA2_EV01.zip`
-- Contenido: Todos los archivos del proyecto + enlace del repositorio
-
----
-
-**Desarrollado para:** Evidencia de desempeño GA7-220501096-AA2-EV01  
 **Tecnologías:** Node.js, Express, MySQL, JavaScript  
 **Estándares:** Cumplimiento total de convenciones de codificación
