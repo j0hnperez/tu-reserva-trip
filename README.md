@@ -1,9 +1,6 @@
 # Tu Reserva Trip - Sistema de Gestión de Usuarios
 
-<<<<<<< HEAD
 **Tecnologías:** Node.js, Express, MySQL, JavaScript vanilla
-=======
->>>>>>> 7e51dc846494235728a1802b2809719fbaf67174
 
 ## 🏗️ Arquitectura del Sistema
 
