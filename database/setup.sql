@@ -17,6 +17,20 @@ CREATE TABLE IF NOT EXISTS usuario (
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+-- Crear tabla de ventas
+CREATE TABLE IF NOT EXISTS ventas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    reservation_code VARCHAR(50) NOT NULL,
+    client_name VARCHAR(200) NOT NULL,
+    sale_amount DECIMAL(10, 2) NOT NULL,
+    commission DECIMAL(10, 2) NOT NULL,
+    advisor_name VARCHAR(200) NOT NULL,
+    sale_date DATETIME NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    UNIQUE KEY (reservation_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- Insertar algunos usuarios de ejemplo (opcional)
 INSERT INTO usuario (nombre, apellido, email, password, rol) VALUES
 ('Juan', 'Pérez', 'juan.perez@email.com', 'password123', 'admin'),

@@ -66,13 +66,13 @@
             </button>
         </div>
         
-        <% if (success) { %>
+        <% if (typeof success !== 'undefined' && success) { %>
             <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
                 <%= success %>
             </div>
         <% } %>
         
-        <% if (error) { %>
+        <% if (typeof error !== 'undefined' && error) { %>
             <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
                 <%= error %>
             </div>
@@ -117,28 +117,28 @@
                             <% ventas.forEach(sale => { %>
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                        <%= sale.reservationCode %>
+                                        <%= sale.reservation_code %>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <%= new Date(sale.saleDate).toLocaleDateString('es-ES') %>
+                                        <%= new Date(sale.sale_date).toLocaleDateString('es-ES') %>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <%= sale.clientName %>
+                                        <%= sale.client_name %>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        $<%= sale.saleAmount.toFixed(2) %>
+                                        $<%= parseFloat(sale.sale_amount).toFixed(2) %>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        $<%= sale.commission.toFixed(2) %>
+                                        $<%= parseFloat(sale.commission).toFixed(2) %>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        <%= sale.advisorName %>
+                                        <%= sale.advisor_name %>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <button onclick="editSale(<%= sale.id %>)" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                        <button onclick="editSale(<%= sale.id_venta %>)" class="text-indigo-600 hover:text-indigo-900 mr-3">
                                             <i class="fas fa-edit mr-1"></i> Editar
                                         </button>
-                                        <button onclick="deleteSale(<%= sale.id %>, '<%= sale.reservationCode %>')" class="text-red-600 hover:text-red-900">
+                                        <button onclick="deleteSale(<%= sale.id_venta %>, '<%= sale.reservation_code %>')" class="text-red-600 hover:text-red-900">
                                             <i class="fas fa-trash mr-1"></i> Eliminar
                                         </button>
                                     </td>
@@ -182,7 +182,8 @@
                     
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-gray-700">Código de Reserva</label>
-                        <input type="text" id="reservationCode" name="reservationCode" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
+                        <input type="text" id="reservationCode" name="reservationCode" value="<%= siguienteCodigo %>" readonly class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md bg-gray-100">
+                        <p class="text-xs text-gray-500 mt-1">Código generado automáticamente</p>
                     </div>
                     
                     <div class="mb-4">
@@ -199,9 +200,11 @@
                         <label class="block text-sm font-medium text-gray-700">Asesor</label>
                         <select id="advisorName" name="advisorName" required class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md">
                             <option value="">Seleccionar asesor...</option>
-                            <option value="Carlos López">Carlos López</option>
-                            <option value="Ana Martínez">Ana Martínez</option>
-                            <option value="María García">María García</option>
+                            <% vendedores.forEach(vendedor => { %>
+                                <option value="<%= vendedor.nombre %> <%= vendedor.apellido %>">
+                                    <%= vendedor.nombre %> <%= vendedor.apellido %>
+                                </option>
+                            <% }); %>
                         </select>
                     </div>
                     

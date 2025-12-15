@@ -1,4 +1,5 @@
 const UsuarioModel = require('../models/usuarioModel');
+const VentaModel = require('../models/ventaModelFixed');
 
 const TRTController = {
   // GET: Mostrar módulo de usuarios
@@ -36,42 +37,57 @@ const TRTController = {
   // GET: Mostrar módulo de ventas
   mostrarVentas: async (req, res) => {
     try {
-      // Simulación de datos de ventas (deberías crear un modelo de ventas)
-      const ventasSimuladas = [
-        {
-          id: 1,
-          reservationCode: 'VT001',
-          saleDate: new Date().toISOString(),
-          clientName: 'Juan Pérez',
-          saleAmount: 1200.00,
-          commission: 360.00,
-          advisorName: 'Carlos López'
-        },
-        {
-          id: 2,
-          reservationCode: 'VT002',
-          saleDate: new Date().toISOString(),
-          clientName: 'María García',
-          saleAmount: 2500.00,
-          commission: 750.00,
-          advisorName: 'Ana Martínez'
+      // Get sales, vendors, and next reservation code
+      VentaModel.obtenerVentas((error, ventas) => {
+        if (error) {
+          console.error('Error al obtener ventas:', error);
+          return res.render('trt-ventas', {
+            title: 'Gestión de Ventas - TRT',
+            usuario: req.session.usuario,
+            ventas: [],
+            vendedores: [],
+            siguienteCodigo: 'RES-001',
+            error: 'Error al cargar las ventas',
+            success: null
+          });
         }
-      ];
-      
-      res.render('trt-ventas', {
-        title: 'Gestión de Ventas - TRT',
-        usuario: req.session.usuario,
-        ventas: ventasSimuladas,
-        success: req.query.success || null,
-        error: req.query.error || null
+        
+        // Get vendors (users with vendedor role)
+        UsuarioModel.obtenerUsuariosPorRol('vendedor', (errorVendedores, vendedores) => {
+          if (errorVendedores) {
+            console.error('Error al obtener vendedores:', errorVendedores);
+            vendedores = [];
+          }
+          
+          // Get next reservation code
+          VentaModel.obtenerSiguienteCodigoReserva((errorCodigo, siguienteCodigo) => {
+            if (errorCodigo) {
+              console.error('Error al obtener siguiente código:', errorCodigo);
+              siguienteCodigo = 'RES-001';
+            }
+            
+            res.render('trt-ventas', {
+              title: 'Gestión de Ventas - TRT',
+              usuario: req.session.usuario,
+              ventas: ventas,
+              vendedores: vendedores,
+              siguienteCodigo: siguienteCodigo,
+              success: req.query.success || null,
+              error: req.query.error || null
+            });
+          });
+        });
       });
     } catch (error) {
       console.error('Error en mostrarVentas:', error);
       res.render('trt-ventas', {
         title: 'Gestión de Ventas - TRT',
         usuario: req.session.usuario,
+        ventas: [],
+        vendedores: [],
+        siguienteCodigo: 'RES-001',
         error: 'Error del servidor',
-        ventas: []
+        success: null
       });
     }
   },
@@ -132,19 +148,38 @@ const TRTController = {
 
   // POST: Crear nueva venta
   crearVenta: (req, res) => {
-    const nuevaVenta = {
-      reservationCode: req.body.reservationCode,
-      clientName: req.body.clientName,
-      saleAmount: parseFloat(req.body.saleAmount),
-      commission: parseFloat(req.body.saleAmount) * 0.3, // 30% de comisión
-      advisorName: req.body.advisorName,
-      saleDate: new Date().toISOString()
-    };
+    // Get the next reservation code automatically
+    VentaModel.obtenerSiguienteCodigoReserva((errorCodigo, siguienteCodigo) => {
+      if (errorCodigo) {
+        console.error('Error al obtener siguiente código:', errorCodigo);
+        return res.redirect('/trt/ventas?error=Error al generar código de reserva');
+      }
 
-    // Simulación - en producción deberías guardar en base de datos
-    console.log('Venta creada:', nuevaVenta);
-    
-    res.redirect('/trt/ventas?success=Venta creada exitosamente');
+      const nuevaVenta = {
+        reservationCode: siguienteCodigo, // Use auto-generated code
+        clientName: req.body.clientName,
+        saleAmount: parseFloat(req.body.saleAmount),
+        commission: parseFloat(req.body.saleAmount) * 0.3, // 30% de comisión
+        advisorName: req.body.advisorName,
+        advisorId: 1, // Por ahora usamos un ID fijo, luego podemos mejorarlo
+        saleDate: new Date().toISOString().split('T')[0] // YYYY-MM-DD format
+      };
+
+      // Validar que todos los campos requeridos estén presentes (excepto reservationCode)
+      if (!nuevaVenta.clientName || isNaN(nuevaVenta.saleAmount) || !nuevaVenta.advisorName) {
+        return res.redirect('/trt/ventas?error=Todos los campos son obligatorios');
+      }
+
+      // Guardar en la base de datos
+      VentaModel.crearVenta(nuevaVenta, (error, ventaCreada) => {
+        if (error) {
+          console.error('Error al crear venta:', error);
+          return res.redirect('/trt/ventas?error=Error al guardar la venta');
+        }
+        
+        res.redirect('/trt/ventas?success=Venta creada exitosamente con código ' + siguienteCodigo);
+      });
+    });
   },
 
   // GET: Mostrar reportes

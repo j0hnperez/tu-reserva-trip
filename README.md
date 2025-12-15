@@ -1,6 +1,8 @@
-# Tu Reserva Trip - Sistema de Gestión de Usuarios
+# Tu Reserva Trip - Sistema de Gestión de Ventas TRT
 
-**Tecnologías:** Node.js, Express, MySQL, JavaScript vanilla
+**Tecnologías:** Node.js, Express, MySQL, EJS, Tailwind CSS, JavaScript
+
+Sistema completo de gestión de ventas para agencia de viajes con control de usuarios, registro de ventas, y generación automática de códigos de reserva.
 
 ## 🏗️ Arquitectura del Sistema
 

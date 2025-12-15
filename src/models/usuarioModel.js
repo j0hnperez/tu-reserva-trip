@@ -64,6 +64,12 @@ const UsuarioModel = {
   eliminarUsuario: (id, callback) => {
     const sql = 'DELETE FROM usuario WHERE id_usuario = ?';
     db.query(sql, [id], callback);
+  },
+
+  // Obtener usuarios por rol
+  obtenerUsuariosPorRol: (rol, callback) => {
+    const sql = 'SELECT * FROM usuario WHERE rol = ? ORDER BY nombre, apellido';
+    db.query(sql, [rol], callback);
   }
 };
 

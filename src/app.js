@@ -57,23 +57,6 @@ app.get('/trt/dashboard', verificarSesion, (req, res) => {
   });
 });
 
-app.get('/admin/dashboard', verificarSesion, (req, res) => {
-  if (req.session.usuario.role !== 'ADMIN') {
-    return res.redirect('/user/dashboard');
-  }
-  res.render('dashboard-admin', { 
-    title: 'Dashboard Administrador',
-    usuario: req.session.usuario 
-  });
-});
-
-app.get('/user/dashboard', verificarSesion, (req, res) => {
-  res.render('dashboard-user', { 
-    title: 'Dashboard Usuario',
-    usuario: req.session.usuario 
-  });
-});
-
 // Ruta raíz redirige al login
 app.get('/', (req, res) => {
   res.redirect('/auth/login');
