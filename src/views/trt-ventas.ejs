@@ -22,10 +22,12 @@
                     <i class="fas fa-tachometer-alt mr-3"></i>
                     Dashboard
                 </a>
+                <% if (usuario.role === 'ADMIN') { %>
                 <a href="/trt/usuarios" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                     <i class="fas fa-users mr-3"></i>
                     Usuarios
                 </a>
+                <% } %>
                 <a href="/trt/ventas" class="bg-gray-800 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
                     <i class="fas fa-shopping-cart mr-3"></i>
                     Ventas
@@ -242,8 +244,25 @@
         
         function deleteSale(saleId, saleCode) {
             if (confirm(`¿Estás seguro de eliminar la venta ${saleCode}?`)) {
-                // Aquí iría la lógica para eliminar
-                console.log('Eliminar venta:', saleId);
+                fetch(`/trt/ventas/${saleId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Recargar la página para mostrar los cambios
+                        window.location.reload();
+                    } else {
+                        alert('Error al eliminar la venta: ' + (data.message || 'Error desconocido'));
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Error al eliminar la venta');
+                });
             }
         }
         

@@ -1,14 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const TRTController = require('../controllers/trtController');
-
-// Middleware para verificar sesión
-function verificarSesion(req, res, next) {
-  if (!req.session.usuario) {
-    return res.redirect('/auth/login');
-  }
-  next();
-}
+const { verificarSesion, verificarRolAdminWeb } = require('../middleware/authMiddleware');
 
 // Rutas del módulo TRT (equivalentes a servlets)
 // GET methods (equivalent to doGet)
@@ -18,14 +11,19 @@ router.get('/dashboard', verificarSesion, (req, res) => {
     usuario: req.session.usuario 
   });
 });  // GET /trt/dashboard
-router.get('/usuarios', verificarSesion, TRTController.mostrarUsuarios);    // GET /trt/usuarios
+
+// Rutas públicas para todos los usuarios autenticados
 router.get('/ventas', verificarSesion, TRTController.mostrarVentas);         // GET /trt/ventas
 router.get('/reportes', verificarSesion, TRTController.mostrarReportes);    // GET /trt/reportes
 
+// Rutas protegidas - Solo administradores
+router.get('/usuarios', verificarRolAdminWeb, TRTController.mostrarUsuarios);    // GET /trt/usuarios
+
 // POST methods (equivalent to doPost)
-router.post('/usuarios', verificarSesion, TRTController.crearUsuario);       // POST /trt/usuarios
-router.post('/ventas', verificarSesion, TRTController.crearVenta);           // POST /trt/ventas
-router.put('/usuarios/:id', verificarSesion, TRTController.actualizarUsuario); // PUT /trt/usuarios/:id
-router.delete('/usuarios/:id', verificarSesion, TRTController.eliminarUsuario); // DELETE /trt/usuarios/:id
+router.post('/usuarios', verificarRolAdminWeb, TRTController.crearUsuario);       // POST /trt/usuarios (solo admin)
+router.post('/ventas', verificarSesion, TRTController.crearVenta);               // POST /trt/ventas (todos autenticados)
+router.put('/usuarios/:id', verificarRolAdminWeb, TRTController.actualizarUsuario); // PUT /trt/usuarios/:id (solo admin)
+router.delete('/usuarios/:id', verificarRolAdminWeb, TRTController.eliminarUsuario); // DELETE /trt/usuarios/:id (solo admin)
+router.delete('/ventas/:id', verificarRolAdminWeb, TRTController.eliminarVenta);   // DELETE /trt/ventas/:id (solo admin)
 
 module.exports = router;

@@ -6,9 +6,7 @@ const DATABASE_CONFIG = {
   user: 'root',
   password: '',
   database: 'tu_reserva_trip',
-  connectionLimit: 10,
-  acquireTimeout: 60000,
-  timeout: 60000
+  connectionLimit: 10
 };
 
 // Crear pool de conexiones

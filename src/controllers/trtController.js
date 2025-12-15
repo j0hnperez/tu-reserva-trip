@@ -182,6 +182,26 @@ const TRTController = {
     });
   },
 
+  // DELETE: Eliminar venta
+  eliminarVenta: (req, res) => {
+    const ventaId = req.params.id;
+
+    VentaModel.eliminarVenta(ventaId, (error) => {
+      if (error) {
+        console.error('Error al eliminar venta:', error);
+        return res.status(500).json({
+          success: false,
+          message: 'Error al eliminar venta'
+        });
+      }
+      
+      res.status(200).json({
+        success: true,
+        message: 'Venta eliminada exitosamente'
+      });
+    });
+  },
+
   // GET: Mostrar reportes
   mostrarReportes: async (req, res) => {
     try {

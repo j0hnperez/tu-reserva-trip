@@ -7,6 +7,7 @@ const usuarioRoutes = require('./routes/usuarioRoutes');
 const authRoutes = require('./routes/authRoutes');
 const trtRoutes = require('./routes/trtRoutes');
 const UsuarioController = require('./controllers/usuarioController');
+const { verificarSesion } = require('./middleware/authMiddleware');
 
 const app = express();
 const SERVER_PORT = 3000;
@@ -33,21 +34,23 @@ app.use(session({
   }
 }));
 
-// Middleware para verificar sesión en rutas protegidas
-function verificarSesion(req, res, next) {
-  if (!req.session.usuario) {
-    return res.redirect('/auth/login');
-  }
-  next();
-}
-
 // Rutas de la API REST
 app.use(`${API_BASE_URL}/usuarios`, usuarioRoutes);
 app.post(`${API_BASE_URL}/login`, UsuarioController.loginUsuario);
 
+// Ruta de verificación del servidor
+app.get('/health', (request, response) => {
+  response.status(200).json({
+    status: 'OK',
+    message: 'API Tu Reserva Trip funcionando correctamente',
+    version: '1.0.0',
+    timestamp: new Date().toISOString()
+  });
+});
+
 // Rutas de aplicación web (equivalentes a servlets)
 app.use('/auth', authRoutes);
-app.use('/trt', trtRoutes); // Added this line
+app.use('/trt', trtRoutes);
 
 // Rutas protegidas (dashboards)
 app.get('/trt/dashboard', verificarSesion, (req, res) => {
@@ -60,16 +63,6 @@ app.get('/trt/dashboard', verificarSesion, (req, res) => {
 // Ruta raíz redirige al login
 app.get('/', (req, res) => {
   res.redirect('/auth/login');
-});
-
-// Ruta de verificación del servidor
-app.get('/health', (request, response) => {
-  response.status(200).json({
-    status: 'OK',
-    message: 'API Tu Reserva Trip funcionando correctamente',
-    version: '1.0.0',
-    timestamp: new Date().toISOString()
-  });
 });
 
 // Iniciar servidor

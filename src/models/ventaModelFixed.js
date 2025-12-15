@@ -82,6 +82,18 @@ const VentaModel = {
       
       callback(null, nextCode);
     });
+  },
+
+  // Eliminar una venta
+  eliminarVenta: (id, callback) => {
+    const query = 'DELETE FROM venta WHERE id_venta = ?';
+    db.query(query, [id], (error, result) => {
+      if (error) {
+        console.error('Error al eliminar venta:', error);
+        return callback(error, null);
+      }
+      callback(null, result.affectedRows > 0);
+    });
   }
 };
 
