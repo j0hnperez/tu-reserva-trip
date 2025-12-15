@@ -12,8 +12,9 @@ CREATE TABLE IF NOT EXISTS usuario (
     email VARCHAR(100) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     rol ENUM('vendedor', 'admin') NOT NULL DEFAULT 'vendedor',
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    avatar VARCHAR(255) DEFAULT 'https://placehold.co/40x40',
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 -- Insertar algunos usuarios de ejemplo (opcional)

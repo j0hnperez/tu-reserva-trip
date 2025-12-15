@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ventas TRT - Sistema de Gestión</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body class="min-h-screen">
+    <!-- Ventana de Autenticacion -->
+    <% if (!usuario) { %>
+    <div id="auth-screen" class="flex items-center justify-center min-h-screen bg-gray-100">
+        <div class="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-lg">
+            <div class="text-center">
+                <div class="mx-auto h-20 w-auto flex items-center justify-center">
+                    <i class="fas fa-plane text-4xl text-indigo-600"></i>
+                </div>
+                <h2 class="mt-6 text-3xl font-extrabold text-gray-900">Ventas TRT</h2>
+                <p class="mt-2 text-sm text-gray-600">Sistema de Gestión Integrado</p>
+            </div>
+
+            <% if (error) { %>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+                    <%= error %>
+                </div>
+            <% } %>
+            
+            <% if (success) { %>
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded">
+                    <%= success %>
+                </div>
+            <% } %>
+
+            <!-- Formulario de inicio de sesion -->
+            <form action="/auth/login" method="POST" class="mt-8 space-y-6">
+                <div class="rounded-md shadow-sm space-y-4">
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700">Correo electrónico</label>
+                        <input id="email" name="email" type="email" autocomplete="email" required 
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                               placeholder="Ingresa tu correo electrónico" value="<%= typeof email !== 'undefined' ? email : 'juan.perez@email.com' %>">
+                    </div>
+                    
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700">Contraseña</label>
+                        <input id="password" name="password" type="password" autocomplete="current-password" required 
+                               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                               placeholder="Ingrese su contraseña" value="password123">
+                    </div>
+                    
+                    <div>
+                        <label for="role" class="block text-sm font-medium text-gray-700">Rol</label>
+                        <select id="role" name="role" required 
+                                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                            <option value="">Selecciona tu rol</option>
+                            <option value="admin" <%= typeof role !== 'undefined' && role === 'admin' ? 'selected' : '' %>>Administrador</option>
+                            <option value="vendedor" <%= typeof role !== 'undefined' && role === 'vendedor' ? 'selected' : '' %>>Vendedor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <button type="submit" 
+                            class="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <span class="absolute left-0 inset-y-0 flex items-center pl-3">
+                            <i class="fas fa-lock h-5 w-5 text-indigo-500 group-hover:text-indigo-400"></i>
+                        </span>
+                        Iniciar Sesión
+                    </button>
+                </div>
+            </form>
+
+            <!-- Enlace para registro -->
+            <div class="text-center">
+                <a href="/auth/registro" class="text-indigo-600 hover:text-indigo-500 text-sm">
+                    ¿No tienes cuenta? Regístrate
+                </a>
+            </div>
+        </div>
+    </div>
+    <% } %>
+
+    <!-- Aplicacion principal -->
+    <% if (usuario) { %>
+    <div id="app-container">
+        <!-- Sidebar -->
+        <div class="fixed inset-y-0 left-0 z-50 w-64 bg-gray-900">
+            <div class="flex items-center h-16 px-4 bg-gray-800">
+                <i class="fas fa-plane text-white text-xl mr-3"></i>
+                <h1 class="text-white text-lg font-semibold">Ventas TRT</h1>
+            </div>
+            
+            <nav class="mt-8">
+                <div class="px-4 space-y-2">
+                    <a href="/trt/dashboard" class="bg-gray-800 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-tachometer-alt mr-3"></i>
+                        Dashboard
+                    </a>
+                    <a href="/trt/usuarios" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-users mr-3"></i>
+                        Usuarios
+                    </a>
+                    <a href="/trt/ventas" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-shopping-cart mr-3"></i>
+                        Ventas
+                    </a>
+                    <a href="/trt/reportes" class="text-gray-300 hover:bg-gray-700 hover:text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                        <i class="fas fa-chart-bar mr-3"></i>
+                        Reportes
+                    </a>
+                </div>
+            </nav>
+            
+            <!-- Usuario info -->
+            <div class="absolute bottom-0 w-full p-4 border-t border-gray-700">
+                <div class="flex items-center">
+                    <img src="<%= usuario.avatar %>" class="h-8 w-8 rounded-full" alt="Avatar">
+                    <div class="ml-3">
+                        <p class="text-sm font-medium text-white"><%= usuario.name %> <%= usuario.lastName %></p>
+                        <p class="text-xs text-gray-400"><%= usuario.role %></p>
+                    </div>
+                </div>
+                <a href="/auth/logout" class="mt-3 flex items-center text-sm text-gray-400 hover:text-white">
+                    <i class="fas fa-sign-out-alt mr-2"></i>
+                    Cerrar Sesión
+                </a>
+            </div>
+        </div>
+        
+        <!-- Contenido principal -->
+        <div class="ml-64 p-8">
+            <!-- Header -->
+            <div class="mb-8">
+                <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+                <p class="text-gray-600">Bienvenido de nuevo, <%= usuario.name %></p>
+            </div>
+            
+            <!-- Dashboard Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-indigo-100 rounded-full">
+                            <i class="fas fa-dollar-sign text-indigo-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">$45,231</h3>
+                            <p class="text-sm text-gray-600">Ventas Totales</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-green-100 rounded-full">
+                            <i class="fas fa-shopping-cart text-green-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">1,234</h3>
+                            <p class="text-sm text-gray-600">Órdenes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-yellow-100 rounded-full">
+                            <i class="fas fa-users text-yellow-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">892</h3>
+                            <p class="text-sm text-gray-600">Clientes</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white p-6 rounded-lg shadow">
+                    <div class="flex items-center">
+                        <div class="p-3 bg-red-100 rounded-full">
+                            <i class="fas fa-chart-line text-red-600"></i>
+                        </div>
+                        <div class="ml-4">
+                            <h3 class="text-lg font-semibold text-gray-900">23.5%</h3>
+                            <p class="text-sm text-gray-600">Crecimiento</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Ventas Recientes -->
+            <div class="bg-white rounded-lg shadow">
+                <div class="px-6 py-4 border Common border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-900">Ventas Recientes</h2>
+                </div>
+                <div class="overflow-hidden">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Cliente</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Producto</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Monto</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody class="bg-white divide-y divide-gray-200">
+                            <tr>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#001</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Juan Pérez</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Viaje a Cartagena</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$1,200</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Completada</span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <odon class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">#002</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">María García</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">Viaje a San Andrés</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">$2,500</td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pendiente</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <% } %>
+</body>
+</html>
