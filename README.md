@@ -1,6 +1,6 @@
 # Tu Reserva Trip - Sistema de Gestión de Ventas TRT
 
-**Tecnologías:** Node.js, Express, MySQL, EJS, Tailwind CSS, JavaScript
+**Tecnologías:** Node.js, Express, MySQL, EJS, Tailwind CSS, JavaScript, Express-Session, Bcrypt
 
 Sistema completo de gestión de ventas para agencia de viajes con control de usuarios, registro de ventas, y generación automática de códigos de reserva.
 
@@ -13,93 +13,74 @@ src/
 ├── config/
 │   └── db.js          # Configuración de conexión a MySQL
 ├── controllers/
-│   └── usuarioController.js  # Lógica de negocio CRUD
+│   ├── trtController.js      # Lógica de negocio para TRT
+│   └── usuarioController.js  # Lógica de negocio para usuarios
 ├── models/
-│   └── usuarioModel.js      # Consultas SQL y manejo de datos
+│   ├── usuarioModel.js      # Modelo de usuarios
+│   └── ventaModel.js        # Modelo de ventas
 └── routes/
-    └── usuarioRoutes.js     # Definición de rutas API REST
+    ├── trtRoutes.js         # Rutas para el panel TRT
+    └── usuarioRoutes.js     # Rutas de API para usuarios
 ```
 
-### Frontend (HTML + CSS + JavaScript)
+### Frontend (EJS + Tailwind CSS)
 ```
-frontend/
-├── usuarios.html      # Interfaz principal de gestión
-└── assets/
-    └── js/
-        └── usuarios.js   # Lógica JavaScript del cliente
+views/
+├── trt-ventas.ejs       # Interfaz de gestión de ventas
+├── trt-usuarios.ejs     # Interfaz de gestión de usuarios
+└── partials/
+    ├── header.ejs       # Encabezado común
+    └── footer.ejs       # Pie de página común
 ```
 
 ## 🔧 Tecnologías Utilizadas
 
 ### Backend
-- **Node.js** - Runtime JavaScript
+- **Node.js** - Entorno de ejecución
 - **Express.js** - Framework web
-- **MySQL2** - Driver de base de datos
-- **CORS** - Habilitación de peticiones cross-origin
+- **MySQL2** - Cliente MySQL para Node.js
+- **Express-Session** - Manejo de sesiones
+- **Bcrypt** - Encriptación de contraseñas
+- **EJS** - Motor de plantillas
 
 ### Frontend
-- **HTML5** - Estructura semántica
-- **CSS3** - Estilos y diseño responsive
-- **JavaScript ES6+** - Lógica del cliente
-- **Fetch API** - Comunicación con el backend
+- **Tailwind CSS** - Framework de estilos
+- **JavaScript** - Interactividad del lado del cliente
+- **Font Awesome** - Iconos
 
 ### Base de Datos
 - **MySQL** - Sistema de gestión de base de datos relacional
 - **phpMyAdmin** - Interfaz de administración
 
-## 📊 Funcionalidades CRUD
+## 📊 Módulos Principales
 
-### ✅ Create (Crear)
-- Endpoint: `POST /api/usuarios`
-- Formulario de registro con validación
-- Campos: nombre, apellido, email, password, rol
+### Gestión de Ventas
+- Registro de nuevas ventas
+- Cálculo automático de comisiones (30%)
+- Historial de ventas con filtros
+- Búsqueda por código de reserva
 
-### ✅ Read (Leer)
-- Endpoint: `GET /api/usuarios` - Listar todos
-- Endpoint: `GET /api/usuarios/:id` - Obtener uno
-- Tabla dinámica con datos en tiempo real
-
-### ✅ Update (Actualizar)
-- Endpoint: `PUT /api/usuarios/:id`
-- Formulario reutilizable para edición
-- Validación de datos
-
-### ✅ Delete (Eliminar)
-- Endpoint: `DELETE /api/usuarios/:id`
-- Confirmación de eliminación
-- Actualización automática de la lista
-
-## 📝 Estándares de Codificación Aplicados
-
-### ✅ Nombramiento de Variables
-- **Constantes:** `MAYUSCULAS_SNAKE_CASE` (API_CONFIG, DOM_ELEMENTS)
-- **Variables:** `camelCase` (usuarioId, usuarioData)
-- **Funciones:** `camelCase` descriptivo (cargarUsuarios, validarFormulario)
-
-### ✅ Nombramiento de Métodos
-- Verbos en español: `crearUsuario`, `actualizarUsuario`, `eliminarUsuario`
-- Nombres descriptivos que indican la acción: `renderizarTablaUsuarios`, `manejarEnvioFormulario`
-
-### ✅ Nombramiento de Clases
-- Archivos con PascalCase: `usuarioController.js`, `usuarioModel.js`
-- Objetos literales con camelCase: `UsuarioController`, `UsuarioModel`
-
-### ✅ Nombramiento de Paquetes
-- Estructura MVC clara: `controllers/`, `models/`, `routes/`, `config/`
-- Separación de responsabilidades
+### Gestión de Usuarios
+- Autenticación de usuarios
+- Roles: Administrador y Vendedor
+- Perfiles de usuario
 
 ## 🗄️ Estructura de Base de Datos
 
+### Tabla: venta
 ```sql
-CREATE TABLE usuario (
-    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    apellido VARCHAR(100) NOT NULL,
-    email VARCHAR(100) NOT NULL UNIQUE,
-    password VARCHAR(255) NOT NULL,
-    rol ENUM('vendedor', 'admin') DEFAULT 'vendedor',
-    fecha_creacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+CREATE TABLE venta (
+    id_venta INT AUTO_INCREMENT PRIMARY KEY,
+    sale_date DATE NOT NULL,
+    register_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    reservation_code VARCHAR(50) NOT NULL UNIQUE,
+    client_name VARCHAR(100) NOT NULL,
+    sale_amount DECIMAL(10,2) NOT NULL,
+    commission DECIMAL(10,2) NOT NULL,
+    advisor_id INT NOT NULL,
+    advisor_name VARCHAR(100) NOT NULL,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (advisor_id) REFERENCES usuario(id_usuario) ON DELETE CASCADE
 );
 ```
 
@@ -108,7 +89,7 @@ CREATE TABLE usuario (
 ### Prerrequisitos
 - Node.js (v14 o superior)
 - MySQL Server
-- phpMyAdmin (recomendado)
+- npm o yarn
 
 ### Pasos de Instalación
 
@@ -126,82 +107,33 @@ CREATE TABLE usuario (
 3. **Configurar base de datos**
    - Crear base de datos `tu_reserva_trip`
    - Ejecutar el script `database/setup.sql`
-   - Verificar conexión en `src/config/db.js`
+   - Ejecutar `database/setup_ventas.sql` para el módulo de ventas
+   - Configurar credenciales en `src/config/db.js`
 
 4. **Iniciar el servidor**
    ```bash
-   npm run dev    # Desarrollo con nodemon
-   npm start      # Producción
+   npm run dev    # Modo desarrollo con recarga automática
    ```
 
-5. **Acceder a la aplicación**
-   - API: http://localhost:3000
-   - Frontend: Abrir `frontend/usuarios.html`
+5. **Acceder al sistema**
+   - URL: http://localhost:3000
+   - Usuario por defecto: admin@example.com / admin123
 
-## 🔍 Endpoints de la API
+## 📝 Características Técnicas
 
-| Método | Ruta | Descripción |
-|--------|------|-------------|
-| GET | `/health` | Verificación del servidor |
-| GET | `/api/usuarios` | Listar todos los usuarios |
-| GET | `/api/usuarios/:id` | Obtener usuario por ID |
-| POST | `/api/usuarios` | Crear nuevo usuario |
-| PUT | `/api/usuarios/:id` | Actualizar usuario |
-| DELETE | `/api/usuarios/:id` | Eliminar usuario |
+### Seguridad
+- Autenticación con sesiones
+- Protección de rutas
+- Encriptación de contraseñas con bcrypt
+- Validación de entrada
 
-## 🧪 Pruebas y Validación
+### Rendimiento
+- Conexiones persistentes a MySQL
+- Consultas optimizadas
+- Caché de sesiones
 
-### Pruebas Funcionales
-- ✅ Creación de usuarios
-- ✅ Listado de usuarios
-- ✅ Edición de usuarios
-- ✅ Eliminación de usuarios
-- ✅ Validación de formularios
-- ✅ Manejo de errores
+### Usabilidad
+- Interfaz intuitiva
+- Retroalimentación visual
+- Diseño responsivo
 
-### Pruebas Técnicas
-- ✅ Conexión a base de datos
-- ✅ Respuestas HTTP correctas
-- ✅ Manejo de CORS
-- ✅ Validación de entrada
-
-## 📱 Características Adicionales
-
-### Frontend
-- ✅ Validación de formularios en tiempo real
-- ✅ Notificaciones visuales para feedback
-- ✅ Diseño responsive
-- ✅ Confirmación para acciones destructivas
-- ✅ Manejo de errores de conexión
-
-### Backend
-- ✅ Respuestas JSON consistentes
-- ✅ Códigos de estado HTTP apropiados
-- ✅ Logging de errores
-- ✅ Validación de parámetros
-- ✅ Manejo de excepciones
-
-## 🔄 Flujo de Trabajo del Desarrollo
-
-1. **Planificación** - Definición de requerimientos y arquitectura
-2. **Diseño** - Estructura MVC y diseño de base de datos
-3. **Implementación** - Codificación siguiendo estándares
-4. **Pruebas** - Validación funcional y técnica
-5. **Documentación** - README y comentarios en código
-6. **Versionamiento** - Control de versiones con Git
-
-## 📈 Métricas del Proyecto
-
-- **Archivos:** 8 archivos principales
-- **Líneas de código:** ~500 líneas (backend + frontend)
-- **Endpoints API:** 6 endpoints funcionales
-- **Funcionalidades:** CRUD completo + validaciones
-
-### Archivos Incluidos
-- ✅ Código fuente completo del proyecto
-- ✅ Base de datos SQL
-- ✅ Documentación README
-- ✅ Enlace al repositorio Git
-
-**Tecnologías:** Node.js, Express, MySQL, JavaScript  
-**Estándares:** Cumplimiento total de convenciones de codificación
