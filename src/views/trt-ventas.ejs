@@ -137,10 +137,10 @@
                                         <%= sale.advisor_name %>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <button onclick="editSale(<%= sale.id_venta %>)" class="text-indigo-600 hover:text-indigo-900 mr-3">
+                                        <button onclick="editSale('<%= sale.id_venta %>')" class="text-indigo-600 hover:text-indigo-900 mr-3">
                                             <i class="fas fa-edit mr-1"></i> Editar
                                         </button>
-                                        <button onclick="deleteSale(<%= sale.id_venta %>, '<%= sale.reservation_code %>')" class="text-red-600 hover:text-red-900">
+                                        <button onclick="deleteSale('<%= sale.id_venta %>', '<%= sale.reservation_code %>')" class="text-red-600 hover:text-red-900">
                                             <i class="fas fa-trash mr-1"></i> Eliminar
                                         </button>
                                     </td>
