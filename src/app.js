@@ -19,6 +19,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride('_method')); // Soporte para PUT/DELETE via POST
 
+// Servir archivos estáticos
+app.use(express.static(path.join(__dirname, '..', 'public')));
+
 // Configurar motor de plantillas EJS (equivalente a JSP)
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
